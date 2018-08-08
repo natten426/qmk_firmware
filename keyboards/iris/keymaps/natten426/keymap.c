@@ -62,9 +62,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
      TILD, 1  , 2  , 3  , 4  , 5  ,                6  , 7  , 8  , 9  , 0  ,BSLS,
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
-         ,    ,    ,    ,    ,LBRC,               RBRC,    ,UP  ,    ,PLUS,ENT ,
+         ,    ,    ,    ,    ,LCBR,               RCBR,    ,UP  ,    ,PLUS,ENT ,
   //|----+----+----+----+----+----+----.    ,----|----+----+----+----+----+----|
-         ,    ,    ,    ,    ,LCBR,    ,         ,RCBR,LEFT,DOWN,RGHT,MINS,ENT ,
+         ,    ,    ,    ,    ,LBRC,    ,         ,RBRC,LEFT,DOWN,RGHT,MINS,ENT ,
   //`----+----+----+--+-+----+----+----/    \----+----+----+----+----+----+----'
                            ,    ,    ,             ,    ,   
   //                  `----+----+----'        `----+----+----'
@@ -72,13 +72,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_RAISE] = LAYOUT_kc(
   //,----+----+----+----+----+----.              ,----+----+----+----+----+----.
-     F12 , F1 , F2 , F3 , F4 , F5 ,                F6 , F7 , F8 , F9 ,F10 ,F11 ,
+         , F1 , F2 , F3 , F4 , F5 ,                F6 , F7 , F8 , F9 ,F10 ,F11 ,
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
          ,EXLM, AT ,HASH,DLR ,PERC,               CIRC,AMPR,ASTR,LPRN,RPRN,PIPE,
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
-         ,MPRV,MNXT,VOLU,PGUP,UNDS,               EQL ,ENT ,UP  ,    ,PLUS,ENT ,
+         ,MPRV,MNXT,VOLU,PGUP,UNDS,               EQL ,ENT ,UP  ,BL_S,PLUS,ENT ,
   //|----+----+----+----+----+----+----.    ,----|----+----+----+----+----+----|
-     MUTE,MSTP,MPLY,VOLD,PGDN,MINS,    ,         ,PLUS,LEFT,DOWN,RGHT,MINS,ENT ,
+         ,MSTP,MPLY,VOLD,PGDN,MINS,    ,         ,PLUS,LEFT,DOWN,RGHT,MINS,ENT ,
   //`----+----+----+--+-+----+----+----/    \----+----+----+----+----+----+----'
                            ,    ,    ,             ,    ,
   //                  `----+----+----'        `----+----+----'
