@@ -35,10 +35,16 @@ enum custom_keycodes {
 
 // tap - mod key    
 #define KC_LGUH MT(MOD_LGUI, KC_LANG1) // Tap HENK, Hold Left GUI
-#define KC_RGUM MT(MOD_RGUI, KC_LANG2) // Tap MHEN, Hold Right GUI
-#define KC_LEIS LT(_LOWER, KC_SPACE) // Tap Space, Hold LOWER Layer
-#define KC_REIS LT(_RAISE, KC_SPACE) // Tap Space, Hold RAISE Layer
-#define KC_RALE MT(MOD_RALT, KC_ENTER) // Tap Enter, Hold Right Alt
+#define KC_RALE MT(MOD_RALT, KC_LANG2) // Tap MHEN, Hold Right Alt
+#define KC_LCTB CTL_T(KC_TAB) // Tap Tab, Hold Left Cotntrol
+
+// TODO: Pane & Tab Switch (for iTerm)
+//   Determine "Mod" + LBRC(RBRC) in RAISE Layer
+//   Determine "Mod" + LCBR(RCBR) in RAISE Layer
+
+// TODO: MacOSX ShortCut
+// * ScreenShot(clipboard) -> GUI + Control + Shift + 4
+// * DisplaySleep -> Control + Up + Eject
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
@@ -46,25 +52,25 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //,----+----+----+----+----+----.              ,----+----+----+----+----+----.
      ESC , 1  , 2  , 3  , 4  , 5  ,                6  , 7  , 8  , 9  , 0  ,MINS,
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
-     TAB , Q  , W  , E  , R  , T  ,                Y  , U  , I  , O  , P  ,BSPC,
+     ESC , Q  , W  , E  , R  , T  ,                Y  , U  , I  , O  , P  ,BSPC,
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
-     LCTL, A  , S  , D  , F  , G  ,                H  , J  , K  , L  ,SCLN,QUOT,
+     LCTB, A  , S  , D  , F  , G  ,                H  , J  , K  , L  ,SCLN,QUOT,
   //|----+----+----+----+----+----+----.    ,----|----+----+----+----+----+----|
-     LSFT, Z  , X  , C  , V  , B  ,   ,          , N  , M  ,COMM,DOT ,SLSH,RSFT,
+     LSFT, Z  , X  , C  , V  , B  ,   ,          , N  , M  ,COMM, DOT,SLSH,RSFT,
   //`----+----+----+--+-+----+----+----/    \----+----+----+----+----+----+----'
-                       LALT,LGUH,LEIS,        REIS,RGUM,RALE
+                       LGUH,LOWR, SPC,        ENT,RASE,RALE
   //                  `----+----+----'       `----+----+----'
   ),
 
   [_LOWER] = LAYOUT_kc(
   //,----+----+----+----+----+----.              ,----+----+----+----+----+----.
-     GRV ,EXLM, AT ,HASH,DLR ,PERC,               CIRC,AMPR,ASTR,LPRN,RPRN,TILD,
+         ,    ,    ,    ,    ,    ,                   ,    ,    ,    ,    ,    ,
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
-     TILD, 1  , 2  , 3  , 4  , 5  ,                6  , 7  , 8  , 9  , 0  ,BSLS,
+         , 1  , 2  , 3  , 4  , 5  ,                6  , 7  , 8  , 9  , 0  ,    ,
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
-         ,    ,    ,    ,    ,LCBR,               RCBR,    ,UP  ,    ,PLUS,ENT ,
-  //|----+----+----+----+----+----+----.    ,----|----+----+----+----+----+----|
-         ,    ,    ,    ,    ,LBRC,    ,         ,RBRC,LEFT,DOWN,RGHT,MINS,ENT ,
+         ,    ,    ,    ,    ,    ,               MINS, EQL,PIPE, GRV,PGUP,    ,
+  //|----+----+----+----+----+----|----.    ,----|----+----+----+----+----+----|
+         ,    ,    ,    ,    ,    ,    ,         ,UNDS,PLUS,BSLS,TILD,PGDN,    ,
   //`----+----+----+--+-+----+----+----/    \----+----+----+----+----+----+----'
                            ,    ,    ,             ,    ,   
   //                  `----+----+----'        `----+----+----'
@@ -72,13 +78,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_RAISE] = LAYOUT_kc(
   //,----+----+----+----+----+----.              ,----+----+----+----+----+----.
-         , F1 , F2 , F3 , F4 , F5 ,                F6 , F7 , F8 , F9 ,F10 ,F11 ,
+         ,    ,    ,    ,    ,    ,                   ,    ,    ,    ,    ,    ,
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
-         ,EXLM, AT ,HASH,DLR ,PERC,               CIRC,AMPR,ASTR,LPRN,RPRN,PIPE,
+         ,EXLM, AT ,HASH, DLR,PERC,               CIRC,AMPR,ASTR,LPRN,RPRN,    ,
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
-         ,MPRV,MNXT,VOLU,PGUP,UNDS,               EQL ,ENT ,UP  ,BL_S,PLUS,ENT ,
+         ,    ,    ,    ,    ,    ,               LEFT,DOWN, UP ,RGHT,    ,    ,
   //|----+----+----+----+----+----+----.    ,----|----+----+----+----+----+----|
-         ,MSTP,MPLY,VOLD,PGDN,MINS,    ,         ,PLUS,LEFT,DOWN,RGHT,MINS,ENT ,
+         ,    ,    ,    ,    ,    ,    ,         ,LBRC,RBRC,LCBR,RCBR,    ,    ,
   //`----+----+----+--+-+----+----+----/    \----+----+----+----+----+----+----'
                            ,    ,    ,             ,    ,
   //                  `----+----+----'        `----+----+----'
@@ -87,7 +93,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_ADJUST] = LAYOUT_kc(
   //,----+----+----+----+----+----.              ,----+----+----+----+----+----.
          ,    ,    ,    ,    ,    ,                   ,    ,    ,    ,    ,    ,
-  //|----+----+----+----+----+----|               |----+----+----+----+----+----|
+  //|----+----+----+----+----+----|              |----+----+----+----+----+----|
      RTOG,RMOD,RHUI,RSAI,RVAI,    ,                   ,    ,    ,    ,    ,    ,
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
          ,DBUG,RHUD,RSAD,RVAD,    ,                   ,BL_S,    ,    ,    ,    ,
@@ -106,6 +112,11 @@ void persistent_default_layer_set(uint16_t default_layer) {
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+  if (record->event.pressed) {
+    set_keylog(keycode, record);
+    // set_timelog();
+  }
+
   switch (keycode) {
     case QWERTY:
       if (record->event.pressed) {
