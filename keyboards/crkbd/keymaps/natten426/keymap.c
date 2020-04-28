@@ -1,14 +1,5 @@
 #include QMK_KEYBOARD_H
-#include "bootloader.h"
-#ifdef PROTOCOL_LUFA
-  #include "lufa.h"
-  #include "split_util.h"
-#endif
-#ifdef SSD1306OLED
-  #include "ssd1306.h"
-#endif
 
-extern keymap_config_t keymap_config;
 
 #ifdef RGBLIGHT_ENABLE
 //Following line allows macro to read current RGB settings
@@ -22,9 +13,9 @@ extern uint8_t is_master;
 // Layer names don't all need to be of the same length, obviously, and you can also skip them
 // entirely and just use numbers.
 #define _QWERTY 0
-#define _LOWER 3
-#define _RAISE 4
-#define _ADJUST 16
+#define _LOWER 1
+#define _RAISE 2
+#define _ADJUST 3
 
 enum custom_keycodes {
   QWERTY = SAFE_RANGE,
@@ -39,23 +30,7 @@ enum macro_keycodes {
   KC_SAMPLEMACRO,
 };
 
-
-#define KC_ KC_TRNS
-#define _______ KC_TRNS
-#define KC______ KC_TRNS
-#define KC_XXXXX KC_NO
-#define KC_LOWER LOWER
-#define KC_RAISE RAISE
-#define KC_RST   RESET
-#define KC_LRST  RGBRST
-#define KC_LTOG  RGB_TOG
-#define KC_LHUI  RGB_HUI
-#define KC_LHUD  RGB_HUD
-#define KC_LSAI  RGB_SAI
-#define KC_LSAD  RGB_SAD
-#define KC_LVAI  RGB_VAI
-#define KC_LVAD  RGB_VAD
-#define KC_LMOD  RGB_MOD
+// modfiyer keys
 #define KC_CTLTB CTL_T(KC_TAB)
 #define KC_GUIEI GUI_T(KC_LANG2)
 #define KC_ALTKN ALT_T(KC_LANG1)
@@ -63,62 +38,65 @@ enum macro_keycodes {
 // tap - mod key
 #define KC_LGUE MT(MOD_LGUI, KC_LANG2) // Tap MHEN, Hold Left GUI
 #define KC_RALH MT(MOD_RALT, KC_LANG1) // Tap HENK, Hold Right Alt
+// MacOSX ShorCut
+#define KC_SCRS SGUI(LCTL(KC_4))       // OSX: ScreenShot(clipboard)
+#define KC_LOCK LGUI(LCTL(KC_Q))       // OSX: LockScreen
+// TODO: * DisplaySleep -> Control + Up + Eject
 
-// TODO: Pane & Tab Switch (for iTerm)
-//   Determine "Mod" + LBRC(RBRC) in RAISE Layer
-//   Determine "Mod" + LCBR(RCBR) in RAISE Layer
-
-// TODO: MacOSX ShortCut
-// * ScreenShot(clipboard) -> GUI + Control + Shift + 4
-// * DisplaySleep -> Control + Up + Eject
+// Tab & Panel Switch (for iTerm)
+#define KC_PRTB LGUI(KC_LCBR) // Previous Tab
+#define KC_NXTB LGUI(KC_RCBR) // Next Tab
+#define KC_PRPN LGUI(KC_LBRC) // Previous Pane
+#define KC_NXPN LGUI(KC_RBRC) // Next Pane
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-  [_QWERTY] = LAYOUT_kc( \
-  //,-----------------------------------------.                ,-----------------------------------------.
-        ESC,     Q,     W,     E,     R,     T,                      Y,     U,     I,     O,     P,  BSPC,\
-  //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-      CTLTB,     A,     S,     D,     F,     G,                      H,     J,     K,     L,  SCLN,  QUOT,\
-  //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-       LSFT,     Z,     X,     C,     V,     B,                      N,     M,  COMM,   DOT,  SLSH,  RSFT,\
-  //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
-                                   LGUE, LOWER,   SPC,      ENT, RAISE, RALH  \
-                              //`--------------------'  `--------------------'
+  [_QWERTY] = LAYOUT( \
+  //,-----------------------------------------------------.                    ,-----------------------------------------------------.
+       KC_ESC,    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                         KC_Y,    KC_U,    KC_I,    KC_O,   KC_P,  KC_BSPC,\
+  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
+     KC_CTLTB,    KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                         KC_H,    KC_J,    KC_K,    KC_L, KC_SCLN, KC_QUOT,\
+  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
+      KC_LSFT,    KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                         KC_N,    KC_M, KC_COMM,  KC_DOT, KC_SLSH, KC_RSFT,\
+  //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
+                                          KC_LGUE,   LOWER,  KC_SPC,     KC_ENT,  RAISE,  KC_RALH \
+                                      //`--------------------------'  `--------------------------'
+
   ),
 
-  [_LOWER] = LAYOUT_kc( \
-  //,-----------------------------------------.                ,-----------------------------------------.
-        ESC,     1,     2,     3,     4,     5,                      6,     7,     8,     9,     0,  BSPC,\
-  //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-      CTLTB, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX,                   MINS,   EQL,  LCBR,  RCBR,  PIPE,   GRV,\
-  //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-       LSFT, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX,                   UNDS,  PLUS,  LBRC,  RBRC,  BSLS,  TILD,\
-  //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
-                                   LGUE, LOWER,   SPC,      ENT, RAISE, RALH  \
-                              //`--------------------'  `--------------------'
+  [_LOWER] = LAYOUT( \
+  //,-----------------------------------------------------.                    ,-----------------------------------------------------.
+       KC_ESC,    KC_1,    KC_2,    KC_3,    KC_4,    KC_5,                         KC_6,    KC_7,    KC_8,    KC_9,    KC_0, KC_BSPC,\
+  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
+     KC_CTLTB, XXXXXXX, XXXXXXX, XXXXXXX,  KC_ENT, KC_SCRS,                      KC_MINS,  KC_EQL, KC_LCBR, KC_RCBR, KC_PIPE,  KC_GRV,\
+  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
+      KC_LSFT, G(KC_1), G(KC_2), G(KC_3), G(KC_4), G(KC_5),                      KC_UNDS, KC_PLUS, KC_LBRC, KC_RBRC, KC_BSLS, KC_TILD,\
+  //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
+                                          KC_LGUE,   LOWER,  KC_SPC,     KC_ENT,   RAISE, KC_RALH \
+                                      //`--------------------------'  `--------------------------'
   ),
 
-  [_RAISE] = LAYOUT_kc( \
-  //,-----------------------------------------.                ,-----------------------------------------.
-        ESC,  EXLM,    AT,  HASH,   DLR,  PERC,                   CIRC,  AMPR,  ASTR,  LPRN,  RPRN,  BSPC,\
-  //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-      CTLTB,      ,      ,      ,      ,      ,                   LEFT,  DOWN,  UP  ,  RGHT,      , XXXXX,\
-  //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-       LSFT,      ,      ,      ,      ,      ,                       ,      ,      ,      ,      , XXXXX,\
-  //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
-                                   LGUE, LOWER,   SPC,      ENT, RAISE, RALH  \
-                              //`--------------------'  `--------------------'
+  [_RAISE] = LAYOUT( \
+  //,-----------------------------------------------------.                    ,-----------------------------------------------------.
+       KC_ESC, KC_EXLM,   KC_AT, KC_HASH,  KC_DLR, KC_PERC,                      KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, KC_BSPC,\
+  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
+     KC_CTLTB, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      KC_LEFT, KC_DOWN,   KC_UP, KC_RGHT, KC_PRTB, KC_NXTB,\
+  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
+      KC_LSFT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      G(KC_6), G(KC_7), G(KC_8), G(KC_9), KC_PRPN, KC_NXPN,\
+  //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
+                                          KC_LGUE,   LOWER,  KC_SPC,     KC_ENT,   RAISE, KC_RALH \
+                                      //`--------------------------'  `--------------------------'
   ),
 
-  [_ADJUST] = LAYOUT_kc( \
-  //,-----------------------------------------.                ,-----------------------------------------.
-        RST,  LRST, XXXXX, XXXXX, XXXXX, XXXXX,                  XXXXX, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX,\
-  //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-       LTOG,  LHUI,  LSAI,  LVAI, XXXXX, XXXXX,                  XXXXX, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX,\
-  //|------+------+------+------+------+------|                |------+------+------+------+------+------|
-       LMOD,  LHUD,  LSAD,  LVAD, XXXXX, XXXXX,                  XXXXX, XXXXX, XXXXX, XXXXX, XXXXX, XXXXX,\
-  //|------+------+------+------+------+------+------|  |------+------+------+------+------+------+------|
-                                   LGUE, LOWER,   SPC,      ENT, RAISE, RALH  \
-                              //`--------------------'  `--------------------'
+  [_ADJUST] = LAYOUT( \
+  //,-----------------------------------------------------.                    ,-----------------------------------------------------.
+        RESET,  RGBRST, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,\
+  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
+      RGB_TOG, RGB_HUI, RGB_SAI, RGB_VAI, XXXXXXX, KC_LOCK,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,\
+  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
+      RGB_MOD, RGB_HUD, RGB_SAD, RGB_VAD, XXXXXXX, XXXXXXX,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,\
+  //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
+                                          KC_LGUE,   LOWER,  KC_SPC,     KC_ENT,   RAISE, KC_RALH \
+                                      //`--------------------------'  `--------------------------'
   )
 };
 
@@ -172,7 +150,7 @@ void matrix_render_user(struct CharacterMatrix *matrix) {
     // If you want to change the display of OLED, you need to change here
     matrix_write_ln(matrix, read_layer_state());
     matrix_write_ln(matrix, read_keylog());
-    matrix_write_ln(matrix, read_keylogs());
+    //matrix_write_ln(matrix, read_keylogs());
     //matrix_write_ln(matrix, read_mode_icon(keymap_config.swap_lalt_lgui));
     //matrix_write_ln(matrix, read_host_led_state());
     //matrix_write_ln(matrix, read_timelog());
@@ -210,7 +188,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         persistent_default_layer_set(1UL<<_QWERTY);
       }
       return false;
-      break;
     case LOWER:
       if (record->event.pressed) {
         layer_on(_LOWER);
@@ -220,7 +197,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         update_tri_layer_RGB(_LOWER, _RAISE, _ADJUST);
       }
       return false;
-      break;
     case RAISE:
       if (record->event.pressed) {
         layer_on(_RAISE);
@@ -230,7 +206,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         update_tri_layer_RGB(_LOWER, _RAISE, _ADJUST);
       }
       return false;
-      break;
     case ADJUST:
         if (record->event.pressed) {
           layer_on(_ADJUST);
@@ -238,7 +213,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
           layer_off(_ADJUST);
         }
         return false;
-        break;
     case RGB_MOD:
       #ifdef RGBLIGHT_ENABLE
         if (record->event.pressed) {
@@ -248,7 +222,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
       #endif
       return false;
-      break;
     case RGBRST:
       #ifdef RGBLIGHT_ENABLE
         if (record->event.pressed) {
@@ -261,4 +234,3 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   }
   return true;
 }
-
